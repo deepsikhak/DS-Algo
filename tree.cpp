@@ -1,22 +1,31 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
 class Node {
 	int data;
 	Node* left;
 	Node* right;
 
-	Node(int data){
-		this.data= data;
-		left = null;
-		right = null;
+	public: 
+	Node(int d){
+		data = d;
+		left = NULL;
+		right = NULL;
 	}
 
+	
 	int getData(){
 		return data;
 	}
 
-	void setData(data){
-		this.data = data;
+	void setData(int d){
+		data = d;
 	}
 
+	
 	Node* getLeft(){
 		return left;
 	}
@@ -32,13 +41,13 @@ class Node {
 	void setRight(Node* node){
 		right = node;
 	}
-}
+};
 
 
 class bst{
 	Node* root;
 
-
+	public: 
 	bst(int data){
 		root = new Node(data);
 	}
@@ -48,54 +57,94 @@ class bst{
 	}
 
 	void setRoot(Node* node){
-		this.root = node;
+		root = node;
 	}
 
-	void insert(Node* root, int newNumber){
+	void insert(Node* root, Node* newNode){
+		if(root==NULL)setRoot(newNode);
+		if(newNode->getData()<=root->getData()){
+			if(root->getLeft() == NULL){
+				root->setLeft(newNode);
+			} else {
+				insert(root->getLeft(), newNode);
+			}
+		}
+		else {
+			if(root->getRight()==NULL){
+				root->setRight(newNode);
+			} else {
+				insert(root->getRight(),newNode);
+			}
+		};
 
 	}
 
 	void inOrder(Node* root){
-		if(root==null)return ;
-		inorder(root->getLeft());
-		cout<<root->getData();
-		inorder(root->getRight());
+		if(root==NULL)return ;
+		inOrder(root->getLeft());
+		cout<<root->getData()<<" ";
+		inOrder(root->getRight());
 	}
 
 	void preOrder(Node* root){
-
+		if(root==NULL)return;
+		cout<<root->getData()<< " ";
+		preOrder(root->getLeft());
+		preOrder(root->getRight());
 	}
 
 	void postOrder(Node* root){
+		if(root==NULL)return;
+		postOrder(root->getLeft());
+		postOrder(root->getLeft());
+		cout<<root->getData();
+	}
+
+	void levelOrder(Node* root){
+		if(root==NULL)return;
+		queue<Node*>q;
+		q.push(root);
+		while(!q.empty()){
+			if(root->getLeft())q.push(root->getLeft());
+			if(root->getRight())q.push(root->getRight());
+			cout<<root->getData();
+			q.pop();
+		}
+
 
 	}
 
 	int maxHeight(Node* root){
-
+		if(root==NULL)return 0;
+		return maxHeight(max(root->getLeft(), root->getRight()))+1;
 	}
 
 	int minHeight(Node* root){
 
 	}
 
-	int leftNode(Node* root){
+	int leafNode(Node* root){
 
 	}
 
 	int sumNodes(Node* root){
-
+		if(root==NULL)return 0;
+		return sumNodes(root->getLeft()) + sumNodes(root->getRight()) + root->getData();
 	}
-}
+};
 
 
 int main(){
-	bst BT = new bst(100);
+	bst* BT = new bst(100);
 	int choice,newNumber;
+	Node* p;
+	int a,s,sum;
 	cout<<"A Binary Search Tree created with value 100 as the root";
 	while(1){
-		cout<<"0 - To exit"<<endl;
+		cout<<"\n0 - To exit"<<endl;
 		cout<<"1 - To Insert Value in the binary search tree"<<endl;
 		cout<<"2 - TO print value in Order"<<endl;
+		cout<<"3 - To print Inorder traversal"<<endl;
 		cin>>choice;
 		switch(choice){
 			case 0:
@@ -104,13 +153,34 @@ int main(){
 			case 1:
 				cout<<"Please enter number you want to add to bst";
 				cin>>newNumber;
-				BT.insert(BT.getRoot(), newNumber)
+				p = new Node(newNumber);
+				BT->insert(BT->getRoot(), p);
 				break;
 			case 2:
-				BT.inOrder(BT.getRoot());
+				BT->inOrder(BT->getRoot());
 				break;
+			case 3:
+				BT->preOrder(BT->getRoot());
+				break;
+			case 4:
+				BT->postOrder(BT->getRoot());
+				break;
+			case 5:
+				BT->levelOrder(BT->getRoot());
+				break;
+			case 6:
+				a = BT->maxHeight(BT->getRoot());
+				cout<<"the Maximum Height is "<<a<<endl;
+				break;
+			case 7:
+				s = BT->minHeight(BT->getRoot());
+				cout<<"The minimum height is "<<s<<endl;
+				break;
+			case 8:
+				sum = BT->sumNodes(BT->getRoot());
+				cout<<"The sum of the nodes is "<<sum<<endl;
 			default:
-				cout<<"Please enter a valid Choice"
+				cout<<"Please enter a valid Choice"<<endl;
 				break;
 		}
 	}
